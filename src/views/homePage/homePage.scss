@@ -1,0 +1,57 @@
+.App {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  font-family: 'Source Sans Pro', sans-serif;
+
+  .homeContainer {
+    display: flex;
+
+    .productsContainer {
+      border-right: 1.5px solid #D0D0D0;
+      border-bottom-right-radius: 10px;
+
+      .productsHeader {
+        display: flex;
+        padding-right: 20px;
+        height: 60px;
+        font-size: 15px;
+        border-bottom: 1.5px solid #D0D0D0;
+        position: relative;
+        .productTypesContainer {
+          display: flex;
+
+          .types {
+            color: #59595a;
+            position: absolute;
+            bottom: 0;
+            border-bottom: 2px solid blue;
+            cursor: pointer;
+          }
+        }
+        .buttonContainer {
+          display: flex;
+          //justify-content: center;
+          align-items: center;
+
+          .addButton {
+            white-space: normal !important;
+          }
+        }
+      }
+
+      .productCont {
+        padding: 20px 0 20px 20px;
+        border-bottom: 1.5px solid #D0D0D0;
+        border-bottom-right-radius: 10px;
+        justify-content: start;
+      }
+    }
+
+    .transactionContainer {
+      padding: 20px;
+    }
+  }
+  .modalContainer {
+    width: 70% !important;
+  }
+}

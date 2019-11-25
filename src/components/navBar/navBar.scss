@@ -1,0 +1,18 @@
+.navBar {
+  background-color: blue;
+  height: 40px;
+  display: grid;
+  line-height: 40px;
+  padding-left: 20px;
+
+  .logoContainer {
+    //margin-left: 20px;
+    .logo {
+      color: white;
+      font-weight: bolder;
+      letter-spacing: 1px;
+      font-size: 20px;
+      font: bolder;
+    }
+  }
+}
