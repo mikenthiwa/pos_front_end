@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLinkedin, faGithub } from '@fortawesome/free-brands-svg-icons'
 import './navBar.scss';
 
-class NavBar extends Component {
+export class NavigationBar extends Component {
+
+    openLinkedIn = () => {
+        window.open('https://www.linkedin.com/in/michaelnthiwamutua/', '_blank' )
+    };
     render() {
         return (
             <div className="navBar">
                 <div className="logoContainer">
                     <span className="logo">SOKO</span>
+                    <span className="linkedInIcon" onClick={this.openLinkedIn}>
+                        <FontAwesomeIcon  icon={faLinkedin} size={"lg"} color="white" />
+                    </span>
                 </div>
             </div>
         );
     }
 }
 
-export default NavBar;

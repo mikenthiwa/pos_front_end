@@ -2,19 +2,17 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import openSocket from 'socket.io-client';
 
-
-
 dotenv.config();
 
-const baseURL = process.env.REACT_APP_BACKEND_URL;
-const backEndUrl = 'http://127.0.0.1:7000';
+const backEndUrl = process.env.REACT_APP_BACKEND_URL;
+const baseUrl = process.env.REACT_APP_BASE_URL;
 
 export const sokoSocket = () => {
-    return openSocket(backEndUrl, {withCredentials: false});
+    return openSocket(baseUrl, {withCredentials: false});
 };
 
 const instance =  axios.create({
-    baseURL,
+    baseURL: backEndUrl,
     headers: {
         'Content-Type': 'application/json',
     },

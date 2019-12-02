@@ -17,16 +17,19 @@ const initialState = {
 export default (state = initialState, action) => {
     switch(action.type) {
         case `${ FETCH_PRODUCTS }`:
-            return { ...state, isLoading: true, data: [], error: {}};
+            return { ...state, isLoading: true };
         case `${ FETCH_PRODUCTS }_SUCCESS`:
-            return { ...state, isLoading: false, data: action.data, product: action.data[0], error: {} };
+            return { ...state, isLoading: false, data: action.data, error: {} };
         case `${ FETCH_PRODUCTS}_FAILURE`:
             return { ...state, isLoading: false, data: [], error: action.error };
          // ADD PRODUCT
         case `${ADD_PRODUCT}`:
             return {...state, isLoading: true};
         case `${ADD_PRODUCT}_SUCCESS`:
-            return { ...state, isLoading: false, data: [...state.data, action.data], error: {}, isModalVisible: false };
+            return { ...state, isLoading: false,
+                data: [...state.data, action.data],
+                error: {}, isModalVisible: false,
+            };
         case `${ADD_PRODUCT}_CONFLICT`:
             return { ...state, isLoading: false, conflictError: action.message, isModalVisible: true};
         case `${ADD_PRODUCT}_FAILURE`:

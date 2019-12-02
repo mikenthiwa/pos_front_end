@@ -1,14 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
     fetchProducts,
     newProduct,
     fetchSingleProduct,
     delProduct,
-    updateProduct
+    updateProduct,
+    addProductSuccess,
+    addProductConflict,
 } from '../../redux/actions/productActions'
-import NavBar from "../../components/navBar/navBar";
-import Card from '../../components/Card/card';
+import {NavigationBar} from "../../components/navBar/navBar";
+import { Navbar, Nav, Button } from "react-bootstrap";
+import Card from '../../components/Card';
 import ProductDetails from '../../components/Card/ProductDetails';
 import ProductForm from '../../components/Form/form';
 import ModalType from "../../components/modal/modalType";
@@ -16,9 +19,28 @@ import 'react-toastify/dist/ReactToastify.css';
 import './homePage.scss';
 
 import { sokoSocket } from "../../services";
+import {toast} from "react-toastify";
+
 
 let socket;
 class App extends Component {
+    constructor(props) {
+        super(props);
+        socket = sokoSocket();
+        socket.on('productAdded', data => {
+            const { conflictMessage } = data;
+            const { addProductSuccess, addProductConflict } = this.props;
+            if(!conflictMessage) {
+                addProductSuccess(data);
+                toast.success('Product Added Successfully');
+            } else{
+                const conflictError = "Product already exists";
+                addProductConflict(conflictError);
+                toast.error("Product already exists")
+            }
+        })
+    }
+
     state = {
         isModalVisible: false,
         productForm: {
@@ -31,7 +53,6 @@ class App extends Component {
     };
 
     componentDidMount() {
-        socket = sokoSocket();
         const { fetchProducts } = this.props;
         fetchProducts(socket);
     }
@@ -40,6 +61,68 @@ class App extends Component {
         const { productData: {isModalVisible, data}} = nextProps;
         this.setState({ isModalVisible, products: data});
     }
+
+
+    renderProductHeader = () => (
+        <Navbar className='productTypesContainer' expand="lg" bg="light">
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse className="typesContainer" id="basic-navbar-nav">
+                <Nav className="mr-auto types">
+                    <Nav.Link className='items'>Groceries</Nav.Link>
+                </Nav>
+            </Navbar.Collapse>
+            {this.renderButtonContainer()}
+        </Navbar>
+    );
+
+    renderProducts = () => {
+        const {
+            productData: { data, isLoading },
+            productData,
+            fetchSingleProduct,
+            delProduct,
+            history
+        } = this.props;
+
+        if(data.length > 0) {
+            return (
+                    <Card
+                        productData={productData}
+                        fetchSingleProduct={fetchSingleProduct}
+                        delProduct={delProduct}
+                        history={history}
+                        onShowModal={this.onShowModal}
+                    />
+            )
+        }
+        return <div className='emptyList'>Please add new products</div>
+    };
+
+    renderProductDetail = () => {
+        const { productData} = this.props;
+            return (
+                <div className='row'>
+                    <ProductDetails
+                        productData={productData}
+                        fetchSingleProduct={fetchSingleProduct}
+                    />
+                </div>
+            )
+    };
+
+    renderButtonContainer = () => {
+        return (
+                <Button
+                    type="button"
+                    className="addButton"
+                    variant="primary"
+                    size="sm"
+                    onClick={() => this.onShowModal('addProduct')}
+                >
+                    Add Product
+                </Button>
+        )
+    };
 
     onShowModal = (actionType, productId) => {
         this.setState({
@@ -79,47 +162,20 @@ class App extends Component {
 
 
     render() {
-        const { productData, fetchSingleProduct, history, delProduct } = this.props;
         const { isModalVisible, error, modalType } = this.state;
-
-        return (
+        const { productData : {isLoading}} = this.props;
+            return (
             <div className="App container-fluid">
-                <NavBar />
+                <NavigationBar />
                 <div className="homeContainer">
                     <div className="productsContainer col-8">
-                        <div className="productsHeader row">
-                            <div className='col-10 productTypesContainer'>
-                                <div className="types">
-                                    <span className='items'>Groceries</span>
-                                </div>
-                            </div>
-                            <div className='col-2 buttonContainer'>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary btn-sm btn-block "
-                                    onClick={() => this.onShowModal('addProduct')}
-                                >
-                                    Add Product
-                                </button>
-                            </div>
-                        </div>
-                        <div className="productCont row">
-                            <Card
-                                productData={productData}
-                                fetchSingleProduct={fetchSingleProduct}
-                                delProduct={delProduct}
-                                history={history}
-                                onShowModal={this.onShowModal}
-                            />
+                            {this.renderProductHeader()}
+                        <div className={ `${isLoading ? 'productContLoading row': 'productCont row'}` }>
+                            {isLoading ? <div className='loader' /> : this.renderProducts()}
                         </div>
                     </div>
                     <div className="transactionContainer col-4">
-                        <div className="row">
-                            <ProductDetails
-                                productData={productData}
-                                fetchSingleProduct={fetchSingleProduct}
-                            />
-                        </div>
+                        {this.renderProductDetail()}
                     </div>
                 </div>
                 <ModalType
@@ -145,6 +201,8 @@ const mapDispatchToProps = () => ({
     fetchSingleProduct,
     delProduct,
     updateProduct,
+    addProductSuccess,
+    addProductConflict
 });
 
 export default connect(mapStateToProps, mapDispatchToProps())(App);
