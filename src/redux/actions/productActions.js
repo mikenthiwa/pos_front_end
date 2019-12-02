@@ -1,4 +1,10 @@
-import { FETCH_PRODUCTS, ADD_PRODUCT, FETCH_SINGLE_PRODUCT} from '../constants';
+import {
+    FETCH_PRODUCTS,
+    ADD_PRODUCT,
+    FETCH_SINGLE_PRODUCT,
+    UPDATE_PRODUCT,
+    DELETE_PRODUCT
+} from '../constants';
 import { toast } from 'react-toastify';
 import sokoAPI from '../../services';
 
@@ -53,12 +59,12 @@ const addProductFailure = error => ({
     error,
 });
 
+
 export const newProduct = (data, socket) => async(dispatch) => {
     dispatch(requestAddProduct());
     try {
         socket.emit('addProduct', data);
         socket.on('productAdded', data => {
-            console.log("data", data);
             const { conflictMessage } = data;
             if(!conflictMessage) {
                 dispatch(addProductSuccess(data))
@@ -97,5 +103,62 @@ export const fetchSingleProduct = (ProductId) => async dispatch => {
     }catch (e) {
         const { response } = e;
         dispatch(fetchSingleProductFailure(response))
+    }
+};
+
+// UPDATE PRODUCT -------------------------------------------------------------
+
+const updateRequest = () => ({
+    type: UPDATE_PRODUCT
+});
+
+const updateSuccess = data => ({
+    type: `${UPDATE_PRODUCT}_SUCCESS`,
+    data
+});
+
+const updateFailure = error => ({
+    type: `${UPDATE_PRODUCT}_FAILURE`,
+    error,
+});
+
+export const updateProduct = (data, productId, socket) => dispatch => {
+    const productData = { ...data, productId };
+    dispatch(updateRequest());
+    try {
+        socket.emit('updateProduct', productData);
+        socket.on('updatedProduct', data => {
+            dispatch(updateSuccess(data))
+        })
+    }catch (e) {
+        dispatch(updateFailure(e.response))
+    }
+};
+
+// DELETE PRODUCT --------------------------------------------------------------------------
+
+const deleteRequest = () => ({
+    type: DELETE_PRODUCT,
+});
+
+const deleteProductSuccess = (data) => ({
+    type: `${DELETE_PRODUCT}_SUCCESS`,
+    data,
+});
+
+const deleteProductFailure = (error) => ({
+    type: `${DELETE_PRODUCT}_FAILURE`,
+    error
+});
+
+export const delProduct = ( productId, socket ) => async dispatch => {
+    dispatch(deleteRequest());
+    try {
+        socket.emit('deleteProduct', productId);
+        socket.on('deletedProduct', data => {
+            dispatch(deleteProductSuccess(data))
+        })
+    }catch (e) {
+        dispatch(deleteProductFailure(e));
     }
 };

@@ -4,19 +4,19 @@ import ModalHeader from "react-bootstrap/ModalHeader";
 import './modal.scss';
 
 
-class ProductModal extends Component{
+class SokoModal extends Component{
 
     render() {
-        const { isModalVisible, closeModal, onSubmit }  = this.props;
+        const { isModalVisible, closeModal, onSubmit, label }  = this.props;
         return (
             <Modal show={ isModalVisible } onHide={closeModal} size='sm'>
                 <ModalHeader closeButton className='modalHeader'>
-                    <div>New Product</div>
+                    <div>{label}</div>
                 </ModalHeader>
                 <ModalBody className='modalBody'>{this.props.children}</ModalBody>
                 <ModalFooter>
                     <button type="button" className="btn btn-success btn-sm" onClick={onSubmit}>
-                        Add Product
+                        {label}
                     </button>
                     <button type="button" className="btn btn-secondary btn-sm " onClick={closeModal}>
                         Cancel
@@ -27,4 +27,4 @@ class ProductModal extends Component{
     }
 }
 
-export default ProductModal;
+export default SokoModal;
