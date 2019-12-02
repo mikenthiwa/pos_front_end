@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchProducts, newProduct, fetchSingleProduct } from '../../redux/actions/productActions'
+import {
+    fetchProducts,
+    newProduct,
+    fetchSingleProduct,
+    delProduct,
+    updateProduct
+} from '../../redux/actions/productActions'
 import NavBar from "../../components/navBar/navBar";
 import Card from '../../components/Card/card';
-import ProductModal from '../../components/modal/modal';
 import ProductDetails from '../../components/Card/ProductDetails';
 import ProductForm from '../../components/Form/form';
+import ModalType from "../../components/modal/modalType";
 import 'react-toastify/dist/ReactToastify.css';
 import './homePage.scss';
 
@@ -19,7 +25,9 @@ class App extends Component {
             ProductName: ''
         },
         error: "",
-        products: []
+        products: [],
+        modalType: "",
+        productId: "",
     };
 
     componentDidMount() {
@@ -33,7 +41,13 @@ class App extends Component {
         this.setState({ isModalVisible, products: data});
     }
 
-    onShowModal = () => this.setState({ isModalVisible: true });
+    onShowModal = (actionType, productId) => {
+        this.setState({
+            isModalVisible: true,
+            modalType: actionType,
+            productId: productId,
+        })
+    };
     closeModal = () => this.setState({
         isModalVisible: false,
         error: '',
@@ -50,19 +64,23 @@ class App extends Component {
     };
 
     onSubmit = () => {
-        const { newProduct }  = this.props;
-        const {productForm: { ProductName }} = this.state;
+        const { newProduct, updateProduct }  = this.props;
+        const {productForm: { ProductName }, modalType, productId} = this.state;
         if(!ProductName){
             this.setState({error: "required"})
         }else {
-            newProduct(this.state.productForm, socket);
+            if(modalType === 'addProduct') {
+                newProduct(this.state.productForm, socket);
+            }else {
+               updateProduct(this.state.productForm, productId, socket)
+            }
         }
     };
 
 
     render() {
-        const { productData, fetchSingleProduct, history } = this.props;
-        const { isModalVisible, error } = this.state;
+        const { productData, fetchSingleProduct, history, delProduct } = this.props;
+        const { isModalVisible, error, modalType } = this.state;
 
         return (
             <div className="App container-fluid">
@@ -79,7 +97,7 @@ class App extends Component {
                                 <button
                                     type="button"
                                     className="btn btn-primary btn-sm btn-block "
-                                    onClick={this.onShowModal}
+                                    onClick={() => this.onShowModal('addProduct')}
                                 >
                                     Add Product
                                 </button>
@@ -89,7 +107,9 @@ class App extends Component {
                             <Card
                                 productData={productData}
                                 fetchSingleProduct={fetchSingleProduct}
+                                delProduct={delProduct}
                                 history={history}
+                                onShowModal={this.onShowModal}
                             />
                         </div>
                     </div>
@@ -102,13 +122,14 @@ class App extends Component {
                         </div>
                     </div>
                 </div>
-                <ProductModal
+                <ModalType
+                    modalType={modalType}
                     isModalVisible={isModalVisible}
                     closeModal={this.closeModal}
                     onSubmit={this.onSubmit}
                 >
                     <ProductForm onChange={this.onChange} inputError={error} />
-                </ProductModal>
+                </ModalType>
             </div>
         );
   }
@@ -121,7 +142,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = () => ({
     fetchProducts,
     newProduct,
-    fetchSingleProduct
+    fetchSingleProduct,
+    delProduct,
+    updateProduct,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps())(App);

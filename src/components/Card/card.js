@@ -1,16 +1,27 @@
 import React, { Component, Fragment } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import {sokoSocket} from "../../services";
 import './cardStyle.scss'
 
 class Card extends Component {
 
     getSingleProduct = (productId) => {
-        const { fetchSingleProduct, history } = this.props;
-        const url = new URLSearchParams();
+        const { fetchSingleProduct } = this.props;
         fetchSingleProduct(productId);
-        console.log(history)
-        history.createHref(`/products/${productId}`)
-
     };
+    removeProduct = (event, productId) => {
+        event.stopPropagation();
+        const socket = sokoSocket();
+        const { delProduct } = this.props;
+        delProduct(productId, socket);
+    };
+    openModal = (event, productId) => {
+        event.stopPropagation();
+        const { onShowModal } = this.props;
+        onShowModal('updateProduct', productId)
+    };
+
     renderCards = () => {
         const { productData: { data } } = this.props;
         if(data) {
@@ -21,7 +32,25 @@ class Card extends Component {
                         className="cardContainer col-sm-2 mr-4 mb-2" key={ProductId}
                         onClick={() => this.getSingleProduct(ProductId)}
                     >
-                        { ProductName }
+                        <div className='iconCont'>
+                            <div
+                                onClick={(event) => this.openModal(event, ProductId)}
+                            >
+                                <FontAwesomeIcon
+                                    icon={faEdit}
+                                    color='blue'
+                                    className='faEdit'
+                                />
+                            </div>
+                            <div>
+                                <FontAwesomeIcon
+                                    icon={faTrash}
+                                    color='blue'
+                                    onClick={(event) => this.removeProduct(event, ProductId)}
+                                />
+                            </div>
+                        </div>
+                        <div className='prodName'>{ ProductName }</div>
                     </div>
                 )
             })

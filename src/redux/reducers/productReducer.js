@@ -1,4 +1,9 @@
-import { FETCH_PRODUCTS, ADD_PRODUCT, FETCH_SINGLE_PRODUCT } from '../constants';
+import {
+    FETCH_PRODUCTS,
+    ADD_PRODUCT,
+    FETCH_SINGLE_PRODUCT,
+    UPDATE_PRODUCT,
+    DELETE_PRODUCT } from '../constants';
 
 const initialState = {
     isLoading: false,
@@ -34,7 +39,26 @@ export default (state = initialState, action) => {
             return { ...state, isLoading: false, error: {}, product: action.data};
         case `${FETCH_SINGLE_PRODUCT}_FAILURE`:
             return { ...state, isLoading: false, error: action.error};
+
+        // UPDATE PRODUCT
+        case UPDATE_PRODUCT:
+            return {...state, isLoading: true};
+        case `${UPDATE_PRODUCT}_SUCCESS`:
+            return {...state, isLoading: false,
+                error: {},
+                data: action.data.products,
+                product: action.data.product};
+        case `${UPDATE_PRODUCT}_FAILURE`:
+            return { ...state, isLoading: false, error: action.error };
+
+        // DELETE_PRODUCT
+        case `${ DELETE_PRODUCT }`:
+            return { ...state, isLoading: true};
+        case `${DELETE_PRODUCT}_SUCCESS`:
+            return { ...state, isLoading: false, data: action.data, error: {} };
+        case `${DELETE_PRODUCT}_FAILURE`:
+            return {...state, isLoading: false, };
         default:
-            return state
+            return state;
     }
 }
