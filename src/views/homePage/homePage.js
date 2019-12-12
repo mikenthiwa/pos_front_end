@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
     fetchProducts,
@@ -16,6 +16,7 @@ import ProductDetails from '../../components/Card/ProductDetails';
 import ProductForm from '../../components/Form/form';
 import ModalType from "../../components/modal/modalType";
 import 'react-toastify/dist/ReactToastify.css';
+import CustomCard from '../../components/Card/card';
 import './homePage.scss';
 
 import { sokoSocket } from "../../services";
@@ -77,7 +78,7 @@ class App extends Component {
 
     renderProducts = () => {
         const {
-            productData: { data, isLoading },
+            productData: { data },
             productData,
             fetchSingleProduct,
             delProduct,
@@ -96,6 +97,14 @@ class App extends Component {
             )
         }
         return <div className='emptyList'>Please add new products</div>
+    };
+
+    renderSkeletonCard = (isLoading) => {
+        const cards = [];
+        for (let i=0; i <= 9; i++) {
+            cards.push(<CustomCard isLoading={isLoading}/>)
+        }
+        return cards.map(card => card)
     };
 
     renderProductDetail = () => {
@@ -163,15 +172,15 @@ class App extends Component {
 
     render() {
         const { isModalVisible, error, modalType } = this.state;
-        const { productData : {isLoading}} = this.props;
+        const { productData : { isLoading }} = this.props;
             return (
             <div className="App container-fluid">
                 <NavigationBar />
                 <div className="homeContainer">
                     <div className="productsContainer col-8">
                             {this.renderProductHeader()}
-                        <div className={ `${isLoading ? 'productContLoading row': 'productCont row'}` }>
-                            {isLoading ? <div className='loader' /> : this.renderProducts()}
+                        <div className='productCont row'>
+                            {isLoading ? this.renderSkeletonCard(isLoading): this.renderProducts()}
                         </div>
                     </div>
                     <div className="transactionContainer col-4">

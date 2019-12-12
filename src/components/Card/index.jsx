@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
+import CustomCard from './card';
 import {sokoSocket} from "../../services";
 import './cardStyle.scss'
 
@@ -21,6 +22,17 @@ class Card extends Component {
         const { onShowModal } = this.props;
         onShowModal('updateProduct', productId)
     };
+    renderIcons = (actionType, iconType, color, className) => (
+        <div onClick={actionType}>
+            <FontAwesomeIcon
+                icon={iconType}
+                color={color}
+                className={className}
+            />
+        </div>
+    );
+
+
 
     renderCard = () => {
         const { productData: { data } } = this.props;
@@ -28,30 +40,22 @@ class Card extends Component {
             return data.map(field => {
                 const { ProductId, ProductName } = field;
                 return (
-                    <div
-                        className="cardContainer col-sm-2 mr-4 mb-2" key={ProductId}
-                        onClick={() => this.getSingleProduct(ProductId)}
+                    <CustomCard
+                        key={ProductId}
+                        getSingleProduct={() => this.getSingleProduct(ProductId)}
                     >
                         <div className='iconCont'>
-                            <div
-                                onClick={(event) => this.openModal(event, ProductId)}
-                            >
-                                <FontAwesomeIcon
-                                    icon={faEdit}
-                                    color='blue'
-                                    className='faEdit'
-                                />
-                            </div>
-                            <div>
-                                <FontAwesomeIcon
-                                    icon={faTrash}
-                                    color='blue'
-                                    onClick={(event) => this.removeProduct(event, ProductId)}
-                                />
-                            </div>
+                            {this.renderIcons(
+                                event => this.openModal(event, ProductId),
+                                faEdit, 'blue', 'faEdit')
+                            }
+                            {this.renderIcons(
+                                event => this.removeProduct(event, ProductId),
+                                faTrash, 'blue')
+                            }
                         </div>
                         <div className='prodName'>{ ProductName }</div>
-                    </div>
+                    </CustomCard>
                 )
             })
         }

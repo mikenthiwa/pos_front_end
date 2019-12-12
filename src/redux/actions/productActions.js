@@ -5,7 +5,6 @@ import {
     UPDATE_PRODUCT,
     DELETE_PRODUCT
 } from '../constants';
-import { toast } from 'react-toastify';
 import sokoAPI from '../../services';
 
 
