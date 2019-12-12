@@ -44,12 +44,15 @@ const requestAddProduct = () => ({
     type: ADD_PRODUCT
 });
 
-const addProductSuccess = data => ({
-    type: `${ADD_PRODUCT}_SUCCESS`,
-    data
-});
+export const addProductSuccess = data => {
+    console.log('data in redux', data)
+    return {
+        type: `${ADD_PRODUCT}_SUCCESS`,
+        data
+    }
+};
 
-const addProductConflict = message => ({
+export const addProductConflict = message => ({
     type: `${ADD_PRODUCT}_CONFLICT`,
     message,
 });
@@ -60,20 +63,11 @@ const addProductFailure = error => ({
 });
 
 
+
 export const newProduct = (data, socket) => async(dispatch) => {
     dispatch(requestAddProduct());
     try {
         socket.emit('addProduct', data);
-        socket.on('productAdded', data => {
-            const { conflictMessage } = data;
-            if(!conflictMessage) {
-                dispatch(addProductSuccess(data))
-            } else{
-                const conflictError = "Product already exists";
-                toast.error(conflictError);
-                dispatch(addProductConflict(conflictError))
-            }
-        })
     }catch (e) {
         dispatch(addProductFailure(e.response))
     }

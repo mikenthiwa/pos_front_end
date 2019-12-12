@@ -22,7 +22,7 @@ class Card extends Component {
         onShowModal('updateProduct', productId)
     };
 
-    renderCards = () => {
+    renderCard = () => {
         const { productData: { data } } = this.props;
         if(data) {
             return data.map(field => {
@@ -56,10 +56,11 @@ class Card extends Component {
             })
         }
     };
+
     render() {
         return (
             <Fragment>
-            {this.renderCards()}
+            {this.renderCard()}
             </Fragment>
         );
     }

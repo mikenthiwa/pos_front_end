@@ -56,3 +56,34 @@
     text-overflow: ellipsis;
   }
 }
+
+@media screen and (max-width: 768px) {
+  .cardContainer {
+    border: 2px solid green;
+    box-shadow: 3px 3px 20px 2px grey;
+    cursor: pointer;
+    border-radius: 10px;
+    flex-direction: column;
+    position: relative;
+
+    .iconCont {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .faEdit {
+        z-index: 1000;
+      }
+    }
+    .prodName {
+      align-self: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}

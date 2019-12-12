@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import './productDetails.scss';
 
 
@@ -13,17 +14,16 @@ class ProductDetails extends React.Component {
         )
     };
     render() {
-        const { productData: { product: {ProductName} }} = this.props;
+        const { productData: { product }} = this.props;
         return (
             <div className="productCardCont">
                 <div className="productImage" />
                 <div className="productDetails">
                     {this.renderProductDetails(
                         'Product Name',
-                        ProductName
+                        _.isEmpty(product) ? '' : product.ProductName,
                     )}
-                    {this.renderProductDetails('Quantity')}
-                    {this.renderProductDetails('Price')}
+
                 </div>
             </div>
         );
