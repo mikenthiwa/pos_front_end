@@ -47,11 +47,11 @@ class Card extends Component {
                         <div className='iconCont'>
                             {this.renderIcons(
                                 event => this.openModal(event, ProductId),
-                                faEdit, 'blue', 'faEdit')
+                                faEdit, '#007bff', 'faEdit')
                             }
                             {this.renderIcons(
                                 event => this.removeProduct(event, ProductId),
-                                faTrash, 'blue')
+                                faTrash, '#007bff')
                             }
                         </div>
                         <div className='prodName'>{ ProductName }</div>

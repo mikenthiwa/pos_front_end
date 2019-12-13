@@ -23,7 +23,6 @@ class ProductDetails extends React.Component {
                         'Product Name',
                         _.isEmpty(product) ? '' : product.ProductName,
                     )}
-
                 </div>
             </div>
         );

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import {
     fetchProducts,
     newProduct,
@@ -8,7 +9,7 @@ import {
     updateProduct,
     addProductSuccess,
     addProductConflict,
-} from '../../redux/actions/productActions'
+} from '../../redux/actions/productActions';
 import {NavigationBar} from "../../components/navBar/navBar";
 import { Navbar, Nav, Button } from "react-bootstrap";
 import Card from '../../components/Card';
@@ -29,18 +30,12 @@ class App extends Component {
         super(props);
         socket = sokoSocket();
         socket.on('productAdded', data => {
-            const { conflictMessage } = data;
-            const { addProductSuccess, addProductConflict } = this.props;
-            if(!conflictMessage) {
-                addProductSuccess(data);
-                toast.success('Product Added Successfully');
-            } else{
-                const conflictError = "Product already exists";
-                addProductConflict(conflictError);
-                toast.error("Product already exists")
-            }
-        })
+            const { addProductSuccess } = this.props;
+            addProductSuccess(data);
+        });
+        socket.on('productAddedSuccess', (data) => toast.success(data) )
     }
+
 
     state = {
         isModalVisible: false,
@@ -59,8 +54,14 @@ class App extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        const { productData: {isModalVisible, data}} = nextProps;
+        const { productData: {isModalVisible, data, ProductName}} = nextProps;
         this.setState({ isModalVisible, products: data});
+        this.setState(prevState => ({
+           ...prevState,
+           isModalVisible,
+           products: data,
+           productForm: {...prevState.productForm, ProductName}
+        }))
     }
 
 
@@ -102,21 +103,21 @@ class App extends Component {
     renderSkeletonCard = (isLoading) => {
         const cards = [];
         for (let i=0; i <= 9; i++) {
-            cards.push(<CustomCard isLoading={isLoading}/>)
+            cards.push(<CustomCard isLoading={isLoading} key={i}/>)
         }
         return cards.map(card => card)
     };
 
     renderProductDetail = () => {
         const { productData} = this.props;
-            return (
-                <div className='row'>
-                    <ProductDetails
-                        productData={productData}
-                        fetchSingleProduct={fetchSingleProduct}
-                    />
-                </div>
-            )
+        return (
+            <div className='row'>
+                <ProductDetails
+                    productData={productData}
+                    fetchSingleProduct={fetchSingleProduct}
+                />
+            </div>
+        )
     };
 
     renderButtonContainer = () => {
@@ -140,10 +141,12 @@ class App extends Component {
             productId: productId,
         })
     };
-    closeModal = () => this.setState({
+    closeModal = () => this.setState(prevState => ({
+        ...prevState,
         isModalVisible: false,
         error: '',
-    });
+        productForm: {...prevState.productForm, ProductName: ''}
+    }));
     onChange = (event) => {
         const { target: { name, value }} = event;
         this.setState(prevState => ({
@@ -156,19 +159,39 @@ class App extends Component {
     };
 
     onSubmit = () => {
-        const { newProduct, updateProduct }  = this.props;
-        const {productForm: { ProductName }, modalType, productId} = this.state;
-        if(!ProductName){
-            this.setState({error: "required"})
-        }else {
+        const { newProduct, updateProduct, productData: {data: products} }  = this.props;
+        const {productForm: { ProductName }, modalType, productId, productForm} = this.state;
+        const newProductName = ProductName.trim();
+
+        if(!newProductName){
+            this.setState(prevState => ({
+                ...prevState,
+                error: "required"
+            }))
+        }
+        else {
+            const myData = products.some(data => {
+                const { ProductName: productName } = data;
+                return newProductName === productName;
+            });
+            if(myData) {
+                addProductConflict("Product already exists");
+                return toast.error("Product already exists")
+            }
+            const regExp = new RegExp('^[a-zA-Z]{3,20}[0-9]?', 'i');
+            if(!regExp.test(newProductName)){
+                return this.setState(prevState => ({
+                    ...prevState,
+                    error: "Please provide a valid product name"
+                }))
+            }
             if(modalType === 'addProduct') {
-                newProduct(this.state.productForm, socket);
+                newProduct({...productForm, ProductName: _.upperFirst(ProductName)}, socket);
             }else {
-               updateProduct(this.state.productForm, productId, socket)
+                updateProduct({...productForm, ProductName: _.upperFirst(ProductName)}, productId, socket)
             }
         }
     };
-
 
     render() {
         const { isModalVisible, error, modalType } = this.state;
@@ -178,7 +201,7 @@ class App extends Component {
                 <NavigationBar />
                 <div className="homeContainer">
                     <div className="productsContainer col-8">
-                            {this.renderProductHeader()}
+                        {this.renderProductHeader()}
                         <div className='productCont row'>
                             {isLoading ? this.renderSkeletonCard(isLoading): this.renderProducts()}
                         </div>
