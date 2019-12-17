@@ -1,8 +1,10 @@
+$card-border: 1px solid green;
+$hover-card-border: 2px solid green;
+
 .cardContainerLoading {
   background-color: #E2E2E2;
   border-top-left-radius: 20px;
   border-bottom-right-radius: 20px;
-
 
   &::after {
     display: flex;
@@ -16,7 +18,7 @@
 .cardContainer {
   position: relative;
   height: 100px;
-  border: 1px solid green;
+  border: $card-border;
   border-top-left-radius: 20px;
   border-bottom-right-radius: 20px;
   box-shadow: 3px 3px 20px 2px grey;
@@ -37,40 +39,40 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-
-};
-
-.cardContainer:hover {
-  height: 100px;
-  border: 2px solid green;
-  box-shadow: 3px 3px 20px 2px grey;
-  cursor: pointer;
-  border-radius: 10px;
-  background-color: lightgray;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-
-  .iconCont {
+  &:hover {
+    height: 100px;
+    border: $hover-card-border;
+    box-shadow: 3px 3px 20px 2px grey;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: lightgray;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    position: relative;
 
-    .faEdit {
-      z-index: 1000;
+    .iconCont {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .faEdit {
+        z-index: 1000;
+        flex-direction: column;
+      }
+    }
+    .prodName {
+      align-self: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
-  .prodName {
-    align-self: center;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-}
+};
+
+
 
 @media screen and (max-width: 768px) {
   .cardContainer {
