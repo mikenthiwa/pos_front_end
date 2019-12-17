@@ -14,14 +14,14 @@ class ProductDetails extends React.Component {
         )
     };
     render() {
-        const { productData: { product }} = this.props;
+        const { productData: { product }, ProductName} = this.props;
         return (
             <div className="productCardCont">
                 <div className="productImage" />
                 <div className="productDetails">
                     {this.renderProductDetails(
                         'Product Name',
-                        _.isEmpty(product) ? '' : product.ProductName,
+                        _.isEmpty(product) ? ProductName : product.ProductName,
                     )}
                 </div>
             </div>
