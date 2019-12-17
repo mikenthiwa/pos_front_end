@@ -46,6 +46,7 @@ class App extends Component {
         products: [],
         modalType: "",
         productId: "",
+        ProductName: "",
     };
 
     componentDidMount() {
@@ -60,7 +61,8 @@ class App extends Component {
            ...prevState,
            isModalVisible,
            products: data,
-           productForm: {...prevState.productForm, ProductName}
+           productForm: {...prevState.productForm, ProductName},
+           ProductName: ProductName,
         }))
     }
 
@@ -109,12 +111,14 @@ class App extends Component {
     };
 
     renderProductDetail = () => {
-        const { productData} = this.props;
+        const { productData } = this.props;
+        const { ProductName } = this.state;
         return (
             <div className='row'>
                 <ProductDetails
                     productData={productData}
                     fetchSingleProduct={fetchSingleProduct}
+                    ProductName={ProductName}
                 />
             </div>
         )

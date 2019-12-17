@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
 	case `${ FETCH_PRODUCTS }`:
 		return { ...state, isLoading: true };
 	case `${ FETCH_PRODUCTS }_SUCCESS`:
-		return { ...state, isLoading: false, data: action.data, error: {} };
+		return { ...state, isLoading: false, data: action.data, error: {}, ProductName: action.data[0].ProductName };
 	case `${ FETCH_PRODUCTS}_FAILURE`:
 		return { ...state, isLoading: false, data: [], error: action.error };
 		// ADD PRODUCT
