@@ -61,7 +61,7 @@ class App extends Component {
            ...prevState,
            isModalVisible,
            products: data,
-           productForm: {...prevState.productForm, ProductName},
+           productForm: {...prevState.productForm, ProductName: ''},
            ProductName: ProductName,
         }))
     }
@@ -182,7 +182,7 @@ class App extends Component {
                 addProductConflict("Product already exists");
                 return toast.error("Product already exists")
             }
-            const regExp = new RegExp('^[a-zA-Z]{3,20}[0-9]?', 'i');
+            const regExp = new RegExp('^[a-zA-Z]{3,18}$[0-9]?', 'i');
             if(!regExp.test(newProductName)){
                 return this.setState(prevState => ({
                     ...prevState,
