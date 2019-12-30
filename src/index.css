@@ -8,6 +8,13 @@ body {
 
 }
 
+@media screen and (max-width: 768px) {
+  body {
+    border-bottom: 2px solid #D0D0D0;
+    border-bottom-right-radius: 12px;
+  }
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
