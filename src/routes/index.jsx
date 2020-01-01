@@ -1,13 +1,18 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import App from '../views/homePage/homePage';
+import Authentication from '../views/authentication';
 
 const routes = () => (
 	<BrowserRouter>
 		<Switch>
 			<Route
-				exact path="/"
+				path="/products"
 				component={App}
+			/>
+			<Route
+				exact path="/"
+				component={Authentication}
 			/>
 		</Switch>
 	</BrowserRouter>

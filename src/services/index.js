@@ -11,7 +11,7 @@ export const sokoSocket = () => {
 	return openSocket(baseUrl, {withCredentials: false});
 };
 
-const instance =  axios.create({
+const instance = axios.create({
 	baseURL: backEndUrl,
 	headers: {
 		'Content-Type': 'application/json',

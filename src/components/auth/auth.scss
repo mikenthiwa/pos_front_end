@@ -1,0 +1,36 @@
+.formHeader {
+  text-align: center;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  color: #333;
+  font-size: 29px;
+
+  .errorMessage {
+    font-weight: normal;
+    color: red;
+    font-size: 17px;
+  }
+}
+
+.buttonCont {
+  margin-top: 20px;
+  .submitButton {
+    background-color: #3b6e22;
+    border: 1px solid #3b6e22;
+    box-shadow: inset 0 1px 1px #a4e388;
+    color: white;
+    width: 100px;
+    border-radius: 5px;
+    height: 30px;
+    outline: none;
+
+    &:hover {
+      background-color: #69a74e
+    }
+    &:active {
+      border: 1px solid #3b6e22;
+      margin-top: 0.5px
+
+    }
+  }
+}
