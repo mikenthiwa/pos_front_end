@@ -1,0 +1,28 @@
+.navBar {
+  background-color: blue;
+  height: 40px;
+  display: flex;
+  line-height: 40px;
+  padding-left: 20px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+  padding-right: 50px;
+
+  .logoContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    .logo {
+      color: white;
+      font-weight: bolder;
+      letter-spacing: 1px;
+      font-size: 20px;
+    }
+    .linkedInIcon {
+      line-height: 40px;
+      cursor: pointer;
+    }
+  }
+}

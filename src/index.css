@@ -5,6 +5,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    border-bottom: 2px solid #D0D0D0;
+    border-bottom-right-radius: 12px;
+  }
 }
 
 code {
